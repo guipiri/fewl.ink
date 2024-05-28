@@ -1,33 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getRequestContext } from '@cloudflare/next-on-pages'
+import bcryptjs from 'bcryptjs'
+import { v4 as uuidv4 } from 'uuid'
 
 export const runtime = 'edge'
 
-interface DTOLink {
-  slug: string
-  redirectTo: string
-  userId: string
+interface DTOUser {
+  email: string
+  password: string
 }
 
 export async function POST(req: NextRequest) {
-  const { slug, redirectTo, userId }: DTOLink = await req.json()
+  const { email, password }: DTOUser = await req.json()
 
   const createdAt = Date.now()
+  const id = uuidv4()
+  const hash = bcryptjs.hashSync(password)
 
   const DB = getRequestContext().env.DB
-  const query = `INSERT INTO Links (slug, redirectTo, userId, createdAt) VALUES ('${slug}','${redirectTo}', '${userId}', '${createdAt}' )`
+  const query = `INSERT INTO Users (id, email, password, createdAt) VALUES ('${id}','${email}', '${hash}', '${createdAt}')`
   const prepare = DB.prepare(query)
 
   try {
     const { success }: D1Result = await prepare.all()
-    return NextResponse.json({ success, message: 'Link criado com sucesso!' })
+    return NextResponse.json({
+      success,
+      message: 'Usuário criado com sucesso!',
+    })
   } catch (error: any) {
-    if (error.message == 'D1_ERROR: UNIQUE constraint failed: Links.slug') {
+    if (error.message == 'D1_ERROR: UNIQUE constraint failed: Users.id') {
       return NextResponse.json({
         success: false,
-        message: 'Este apelido já existe!',
+        message: 'Este id já existe!',
       })
     }
+
     return NextResponse.json({ success: false, message: error.message })
   }
 }

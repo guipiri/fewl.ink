@@ -1,16 +1,25 @@
 DROP TABLE IF EXISTS Links;
 DROP TABLE IF EXISTS Clicks;
+DROP TABLE IF EXISTS Users;
+
+CREATE TABLE Users (
+  id TEXT NOT NULL PRIMARY KEY,
+  email TEXT NOT NULL,
+  password INTEGER NOT NULL,
+  createdAt INTEGER NOT NULL
+);
 
 CREATE TABLE Links (
-  slug text NOT NULL PRIMARY KEY,
-  redirectTo text NOT NULL,
-  createdAt integer NOT NULL
+  slug TEXT NOT NULL PRIMARY KEY,
+  redirectTo TEXT NOT NULL,
+  userId TEXT NOT NULL,
+  createdAt INTEGER NOT NULL,
+  FOREIGN KEY (userId) REFERENCES Users(id)
 );
 
 CREATE TABLE Clicks (
-  slug text NOT NULL,
-  clicksCount integer NOT NULL,
-  date date NOT NULL
+  slug TEXT NOT NULL,
+  clicksCount INTEGER NOT NULL,
+  date INTEGER NOT NULL,
+  FOREIGN KEY (slug) REFERENCES Links(slug)
 );
-
-
