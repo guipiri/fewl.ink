@@ -1,7 +1,9 @@
+import LinkShortnerForms from './components/LinkShortnerForms'
+
 export default function Home() {
   return (
-    <>
-      <h1>Homeee</h1>
-    </>
+    <div>
+      <LinkShortnerForms />
+    </div>
   )
 }
