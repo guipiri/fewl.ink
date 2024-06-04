@@ -5,8 +5,6 @@ import GoogleProvider from 'next-auth/providers/google'
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!
 
-export const runtime = 'edge'
-
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
